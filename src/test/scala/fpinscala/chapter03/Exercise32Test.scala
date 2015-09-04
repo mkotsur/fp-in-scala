@@ -1,6 +1,6 @@
 package fpinscala.chapter03
 
-import org.scalatest.{FunSpec, Matchers, FunSuite}
+import org.scalatest.{FunSpec, Matchers}
 
 class Exercise32Test extends FunSpec with Matchers {
 
@@ -73,5 +73,34 @@ class Exercise32Test extends FunSpec with Matchers {
       e.getMessage should include ("drop")
     }
 
+  }
+
+  describe("Drop while") {
+    it("should drop elements") {
+      val l = Exercise32.List("aaa", "abb", "bbb", "aab")
+      val dropped = Exercise32.List.dropWhile[String](l, _.startsWith("a"))
+      dropped shouldBe Exercise32.List("bbb", "aab")
+    }
+
+    it("should return Nil ") {
+      val l = Exercise32.Nil
+      Exercise32.List.dropWhile[String](l, _.startsWith("a")) shouldBe l
+
+    }
+    it("should drop all elements") {
+      val l = Exercise32.List(1,2,3)
+      Exercise32.List.dropWhile[Int](l, _ < 4) shouldBe Exercise32.Nil
+    }
+  }
+
+  describe("Init") {
+    it("should drop last") {
+      val l = Exercise32.List(1,2,3)
+      Exercise32.List.init(l) shouldBe Exercise32.List(1,2,3)
+    }
+
+    it("Nil should return Nil") {
+      Exercise32.List.init(Exercise32.Nil) shouldBe Exercise32.Nil
+    }
   }
 }
