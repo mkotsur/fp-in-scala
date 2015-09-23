@@ -1,5 +1,8 @@
 package fpinscala.chapter03
 
+import scala.annotation.tailrec
+import scala.collection.mutable.ListBuffer
+
 object Exercise32 {
 
   sealed trait List[+A] // `List` data type, parameterized on a type, `A`
@@ -25,14 +28,6 @@ object Exercise32 {
       if (as.isEmpty) Nil
       else Cons(as.head, apply(as.tail: _*))
 
-    val x = List(1,2,3,4,5) match {
-      case Cons(x, Cons(2, Cons(4, _))) => x
-      case Nil => 42
-      case Cons(x, Cons(y, Cons(3, Cons(4, _)))) => x + y
-      case Cons(h, t) => h + sum(t)
-      case _ => 101
-    }
-
     def append[A](a1: List[A], a2: List[A]): List[A] =
       a1 match {
         case Nil => a2
@@ -48,8 +43,14 @@ object Exercise32 {
     def sum2(ns: List[Int]) =
       foldRight(ns, 0)((x,y) => x + y)
 
+    def sumLeft(ns: List[Int]) =
+      foldLeft(ns, 0)((x,y) => x + y)
+
     def product2(ns: List[Double]) =
       foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
+
+    def productLeft(ns: List[Double]) =
+      foldLeft(ns, 1.0)(_ * _)
 
 
     def tail[A](l: List[A]): List[A] = l match {
@@ -70,18 +71,32 @@ object Exercise32 {
       }
     }
 
+    // NOTE: it seems not to be necessary to group stuff into 2 argument lists anymore
     def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
       case Cons(h, t) if f(h) => dropWhile(t, f)
       case _ => l
     }
 
-    def init[A](l: List[A]): List[A] = sys.error("todo")
+    def init[A](l: List[A]): List[A] = l match {
+      case Nil => throw new UnsupportedOperationException("Can't do init on empty list")
+      case Cons(h, Nil) => Nil
+      case Cons(h, t) => Cons(h, init(t))
+    }
 
-    def length[A](l: List[A]): Int = sys.error("todo")
 
-    def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = sys.error("todo")
+
+    def length[A](l: List[A]): Int = foldRight(l, 0)( (_, v) => v + 1)
+
+    @tailrec
+    def foldLeft[A,B](l: List[A], z: B)(f: (B, A) => B): B = l match {
+      case Nil => z
+      case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
+    }
+
 
     def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
+
+    def reverse[A](l: List[A]): List[A] = ???
   }
 
 
