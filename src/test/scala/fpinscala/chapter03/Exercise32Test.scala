@@ -85,11 +85,16 @@ class Exercise32Test extends FunSpec with Matchers {
     it("should return Nil ") {
       val l = Exercise32.Nil
       Exercise32.List.dropWhile[String](l, _.startsWith("a")) shouldBe l
-
     }
+
     it("should drop all elements") {
       val l = Exercise32.List(1,2,3)
       Exercise32.List.dropWhile[Int](l, _ < 4) shouldBe Exercise32.Nil
+    }
+
+    it("should work 2") {
+      val l = Exercise32.List(1,2,3)
+      Exercise32.List.dropWhile[Int](l, _ % 2 == 0) shouldBe Exercise32.List(1,2,3)
     }
   }
 
@@ -146,7 +151,20 @@ class Exercise32Test extends FunSpec with Matchers {
   }
 
   describe("3.12 reverse") {
-    val l = Exercise32.List(1, 2, 3)
-    Exercise32.List.reverse(l) shouldBe Exercise32.List(3, 2, 1)
+    it ("should reverse the list") {
+      val l = Exercise32.List(1, 2, 3)
+      Exercise32.List.reverse(l) shouldBe Exercise32.List(3, 2, 1)
+    }
+  }
+  describe("contains") {
+    it ("should find sublist") {
+      val l = Exercise32.List(1, 2, 3, 4, 5)
+      Exercise32.List.hasSubsequence(l, Exercise32.List(2, 3)) shouldBe true
+    }
+
+    it ("should not allow broken sublists") {
+      val l = Exercise32.List(1, 2, 3, 4, 5)
+      Exercise32.List.hasSubsequence(l, Exercise32.List(2, 4)) shouldBe false
+    }
   }
 }

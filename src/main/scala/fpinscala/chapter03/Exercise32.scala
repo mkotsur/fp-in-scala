@@ -34,12 +34,6 @@ object Exercise32 {
         case Cons(h,t) => Cons(h, append(t, a2))
       }
 
-    def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B = // Utility functions
-      as match {
-        case Nil => z
-        case Cons(x, xs) => f(x, foldRight(xs, z)(f))
-      }
-
     def sum2(ns: List[Int]) =
       foldRight(ns, 0)((x,y) => x + y)
 
@@ -65,13 +59,14 @@ object Exercise32 {
 
     def drop[A](l: List[A], n: Int): List[A] = {
       (1 to n).foldLeft(l) { (l, _) => l match {
-          case Nil => throw new IllegalArgumentException(s"Can not drop $n elements")
-          case _ => tail(l)
-        }
+        case Nil => throw new IllegalArgumentException(s"Can not drop $n elements")
+        case _ => tail(l)
+      }
       }
     }
 
     // NOTE: it seems not to be necessary to group stuff into 2 argument lists anymore
+    @tailrec
     def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
       case Cons(h, t) if f(h) => dropWhile(t, f)
       case _ => l
@@ -92,6 +87,26 @@ object Exercise32 {
       case Nil => z
       case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
     }
+
+
+    def foldRight[A,B](as: List[A], z: B)(f: (A, B) => B): B = // Utility functions
+      as match {
+        case Nil => z
+        case Cons(x, xs) => f(x, foldRight(xs, z)(f))
+      }
+
+    def hasSubsequence[A](l: List[A], sl: List[A]): Boolean =
+      foldLeft(l, (false, sl))(
+        (acc, next) => {
+          val (works, rest) = acc
+          rest match {
+            case Nil => (works, Nil)
+            case Cons(x, xs) if x == next =>
+              (true, xs)
+            case Cons(x, xs) =>
+              (false , sl)
+          }
+        })._1
 
 
     def map[A,B](l: List[A])(f: A => B): List[B] = sys.error("todo")
