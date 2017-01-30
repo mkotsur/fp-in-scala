@@ -83,6 +83,14 @@ object Chapter5 {
   case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
 
   object Stream {
+
+    def constant[A](a: A): Stream[A] = cons(a, constant(a))
+
+    def from(n: Int): Stream[Int] = cons(n, from(n+1))
+
+    def fibs(k: Int = 0, n: Int = 1): Stream[Int] =
+      cons(k, fibs(n, k + n))
+
     def cons[A](hd: => A, tl: => Stream[A]): Stream[A] = {
       lazy val head = hd
       lazy val tail = tl

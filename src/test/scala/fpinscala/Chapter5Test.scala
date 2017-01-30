@@ -136,4 +136,22 @@ class Chapter5Test extends FunSpec with Matchers {
 
   }
 
+  describe("Exercise 5.8: constant()") {
+    it("should return a constant stream") {
+      Stream.constant(42).drop(10).take(3).toList shouldBe List(42, 42, 42)
+    }
+  }
+
+  describe("Exercise 5.9: from()") {
+    it("should generate a correct stream") {
+      Stream.from(1).drop(10).take(3).toList shouldBe List(11, 12, 13)
+    }
+  }
+
+  describe("Exercise 5.10: fibs()") {
+    it("should generate a correct stream") {
+      Stream.fibs().take(7).toList shouldBe List(0, 1, 1, 2, 3, 5, 8)
+    }
+  }
+
 }
